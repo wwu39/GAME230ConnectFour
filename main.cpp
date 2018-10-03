@@ -1,20 +1,17 @@
-#include <iostream>
-#include "Header.h"
+#include<string>
+#include <stdexcept>
+#include "connect4.h"
 
 using namespace std;
 
-int main() {
+int main()
+{
 	cout << "Let's play Connect Four!" << endl;
-	Dims size {6, 7};
-	for (int i = 0; i < size.y; ++i) cout << i + 1;
-	cout << endl;
-	for (int i = 0; i < size.x; ++i) {
-		for (int j = 0; j < size.y; ++j) {
-			cout << ".";
-		}
-		cout << endl;
-	}
+	Connect4 game{6, 7};
+	game.display();
+	int input_X, input_O;
 	cout << "Player X's turn! Type the column number to insert a piece: ";
-	cin >> inputs.X;
+	cin >> input_X;
+	// to be continued
 	return 0;
 }
