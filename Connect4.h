@@ -15,6 +15,7 @@ class Connect4
 	char **chessboard;
 	Connect4(); // dummy ctor
 	Pair lastMove; // keep track the location of last move
+
 public:
 	// ctor and dtor
 	Connect4(int, int, int = 4, bool = false);
