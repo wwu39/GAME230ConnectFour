@@ -22,6 +22,7 @@ int main()
 	Connect4 * game = new Connect4(6, 7);
 	game->display();
 	string input_X, input_O;
+	int winner = NO_WINNER;
 	while (1)
 	{
 		cout << "Player X's turn! Type the column number to insert a piece: ";
@@ -32,7 +33,8 @@ int main()
 			cin >> input_X;
 		}
 		game->display();
-		if (game->checkWinner()) break;
+		winner = game->checkWinner();
+		if (winner) break;
 
 		cout << "Player O's turn! Type the column number to insert a piece: ";
 		cin >> input_O;
@@ -42,9 +44,15 @@ int main()
 			cin >> input_O;
 		}
 		game->display();
-		if (game->checkWinner()) break;
+		winner = game->checkWinner();
+		if (winner) break;
 	}
-	// to be continued
+	switch (winner) {
+		case WINNER_X: cout << "Winner is X!!!" << endl; break;
+		case WINNER_O: cout << "Winner is O!!!" << endl; break;
+		case WINNER_TIE: cout << "Draw." << endl; break;
+		default: cout << "ERROR: This never happened."; break;
+	}
 	system("pause");
 	delete game;
 	return 0;

@@ -8,6 +8,15 @@ Connect4::Connect4()
 	// this is private so never used
 }
 
+int Connect4::winner(char player)
+{
+	switch (player) {
+		case 'X': return WINNER_X;
+		case 'O': return WINNER_O;
+	}
+	return NO_WINNER;
+}
+
 Connect4::Connect4(int a, int b, int connect, bool wraparound)
 {
 	// set params
@@ -16,6 +25,8 @@ Connect4::Connect4(int a, int b, int connect, bool wraparound)
 	this->connect = connect;
 	this->wraparound = wraparound;
 	lastMove = { -1, -1 };
+	totalMoves = 0;
+	curPlayer = -1;
 
 	// create chessboard
 	chessboard = new char*[x];
@@ -49,6 +60,7 @@ void Connect4::display()
 
 int Connect4::setX(int a)
 {
+	curPlayer = PLAYER_X;
 	if ((a > y) || (a < 1)) return INSERT_FAIL;
 	for (int i = x - 1; i > -1; i--)
 	{
@@ -56,6 +68,7 @@ int Connect4::setX(int a)
 		{
 			chessboard[i][a - 1] = 'X';
 			lastMove = { i, a - 1 };
+			++totalMoves;
 			return SUCCESS;
 		}
 	}
@@ -64,6 +77,7 @@ int Connect4::setX(int a)
 
 int Connect4::setO(int a)
 {
+	curPlayer = PLAYER_O;
 	if ((a > y) || (a < 1)) return INSERT_FAIL;
 	for (int i = x - 1; i > -1; i--)
 	{
@@ -71,6 +85,7 @@ int Connect4::setO(int a)
 		{
 			chessboard[i][a - 1] = 'O';
 			lastMove = { i, a - 1 };
+			++totalMoves;
 			return SUCCESS;
 		}
 	}
@@ -79,5 +94,42 @@ int Connect4::setO(int a)
 
 int Connect4::checkWinner()
 {
+	if (totalMoves >= x * y) return WINNER_TIE;
+	if (checkHorizontal()) return winner(curPlayer);
+	if (checkVertical()) return winner(curPlayer);
+	if (checkDiagonal()) return winner(curPlayer);
 	return NO_WINNER;
+}
+
+bool Connect4::checkHorizontal()
+{
+	int score, cur_x, cur_y;
+	if (wraparound) {
+
+	} else {
+
+	}
+	return score >= connect;
+}
+
+bool Connect4::checkVertical()
+{
+	int score, cur_x, cur_y;
+	if (wraparound) {
+
+	} else {
+
+	}
+	return score >= connect;
+}
+
+bool Connect4::checkDiagonal()
+{
+	int score, cur_x, cur_y;
+	if (wraparound) {
+
+	} else {
+
+	}
+	return score >= connect;
 }

@@ -2,10 +2,13 @@
 #define NO_WINNER 0
 #define WINNER_X 1
 #define WINNER_O 2
+#define WINNER_TIE 3
 #define SUCCESS 0
 #define INSERT_FAIL 3
+#define PLAYER_X 'X'
+#define PLAYER_O 'O'
 
-struct Pair { int a, b; };
+struct Pair { int x, y; };
 
 class Connect4
 {
@@ -15,6 +18,14 @@ class Connect4
 	char **chessboard;
 	Connect4(); // dummy ctor
 	Pair lastMove; // keep track the location of last move
+	int totalMoves;
+	char curPlayer;
+
+	// private helpers
+	int winner(char);
+	bool checkHorizontal();
+	bool checkVertical();
+	bool checkDiagonal();
 
 public:
 	// ctor and dtor
