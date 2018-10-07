@@ -25,6 +25,8 @@ class Connect4
 	bool checkHorizontal(char);
 	bool checkVertical(char);
 	bool checkDiagonal(char);
+	// c++ % yields negative# so I need this
+	int posmod(int a, int n) { return (a % n + n) % n; };
 
 public:
 	// ctor and dtor

@@ -101,8 +101,19 @@ int Connect4::checkWinner(char player)
 bool Connect4::checkHorizontal(char player)
 {
 	int score = 1;
-	if (wraparound) {
-
+	if (wraparound) { // wrap around chessboard basically makes use of modulo
+		// sum left
+		for (int i = posmod(lastMove.y - 1, y); i != lastMove.y; i = posmod(i - 1, y)) {
+			if (chessboard[lastMove.x][i] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum right
+		for (int i = posmod(lastMove.y + 1, y); i != lastMove.y; i = posmod(i + 1, y)) {
+			if (chessboard[lastMove.x][i] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
 	} else {
 		// sum left
 		for (int i = lastMove.y - 1; i >= 0; --i) {
@@ -123,8 +134,19 @@ bool Connect4::checkHorizontal(char player)
 bool Connect4::checkVertical(char player)
 {
 	int score = 1;
-	if (wraparound) {
-
+	if (wraparound) { // wrap around chessboard basically makes use of modulo
+		// sum upwards
+		for (int i = posmod(lastMove.x - 1, x); i != lastMove.x; i = posmod(i - 1, x)) {
+			if (chessboard[i][lastMove.y] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum downwards
+		for (int i = posmod(lastMove.x + 1, x); i != lastMove.x; i = posmod(i + 1, x)) {
+			if (chessboard[i][lastMove.y] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
 	}
 	else {
 		// sum upwards
@@ -146,8 +168,36 @@ bool Connect4::checkVertical(char player)
 bool Connect4::checkDiagonal(char player)
 {
 	int score = 1;
-	if (wraparound) {
-
+	if (wraparound) { // wrap around chessboard basically makes use of modulo
+		// sum up-left
+		for (int i = posmod(lastMove.x - 1, x), j = posmod(lastMove.y - 1, y);;
+			i = posmod(i - 1, x), j = posmod(j - 1, y)) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum down-right
+		for (int i = posmod(lastMove.x + 1, x), j = posmod(lastMove.y + 1, y);;
+			i = posmod(i + 1, x), j = posmod(j + 1, y)) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum up-right
+		score = 1;
+		for (int i = posmod(lastMove.x - 1, x), j = posmod(lastMove.y + 1, y);;
+			i = posmod(i - 1, x), j = posmod(j + 1, y)) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum down-left
+		for (int i = posmod(lastMove.x + 1, x), j = posmod(lastMove.y - 1, y);;
+			i = posmod(i + 1, x), j = posmod(j - 1, y)) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
 	} else{
 		// sum up-left
 		for (int i = lastMove.x - 1, j = lastMove.y - 1;
@@ -181,3 +231,4 @@ bool Connect4::checkDiagonal(char player)
 	}
 	return false;
 }
+
