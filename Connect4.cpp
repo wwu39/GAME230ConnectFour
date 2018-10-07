@@ -26,7 +26,6 @@ Connect4::Connect4(int a, int b, int connect, bool wraparound)
 	this->wraparound = wraparound;
 	lastMove = { -1, -1 };
 	totalMoves = 0;
-	curPlayer = -1;
 
 	// create chessboard
 	chessboard = new char*[x];
@@ -60,7 +59,6 @@ void Connect4::display()
 
 int Connect4::setX(int a)
 {
-	curPlayer = PLAYER_X;
 	if ((a > y) || (a < 1)) return INSERT_FAIL;
 	for (int i = x - 1; i > -1; i--)
 	{
@@ -77,7 +75,6 @@ int Connect4::setX(int a)
 
 int Connect4::setO(int a)
 {
-	curPlayer = PLAYER_O;
 	if ((a > y) || (a < 1)) return INSERT_FAIL;
 	for (int i = x - 1; i > -1; i--)
 	{
@@ -92,44 +89,95 @@ int Connect4::setO(int a)
 	return INSERT_FAIL;
 }
 
-int Connect4::checkWinner()
+int Connect4::checkWinner(char player)
 {
 	if (totalMoves >= x * y) return WINNER_TIE;
-	if (checkHorizontal()) return winner(curPlayer);
-	if (checkVertical()) return winner(curPlayer);
-	if (checkDiagonal()) return winner(curPlayer);
+	if (checkHorizontal(player)) return winner(player);
+	if (checkVertical(player)) return winner(player);
+	if (checkDiagonal(player)) return winner(player);
 	return NO_WINNER;
 }
 
-bool Connect4::checkHorizontal()
+bool Connect4::checkHorizontal(char player)
 {
-	int score, cur_x, cur_y;
+	int score = 1;
 	if (wraparound) {
 
 	} else {
-
+		// sum left
+		for (int i = lastMove.y - 1; i >= 0; --i) {
+			if (chessboard[lastMove.x][i] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum right
+		for (int i = lastMove.y + 1; i < y; ++i) {
+			if (chessboard[lastMove.x][i] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
 	}
-	return score >= connect;
+	return false;
 }
 
-bool Connect4::checkVertical()
+bool Connect4::checkVertical(char player)
 {
-	int score, cur_x, cur_y;
+	int score = 1;
 	if (wraparound) {
 
-	} else {
-
 	}
-	return score >= connect;
+	else {
+		// sum upwards
+		for (int i = lastMove.x - 1; i >= 0; --i) {
+			if (chessboard[i][lastMove.y] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum downwards
+		for (int i = lastMove.x + 1; i < x; ++i) {
+			if (chessboard[i][lastMove.y] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+	}
+	return false;
 }
 
-bool Connect4::checkDiagonal()
+bool Connect4::checkDiagonal(char player)
 {
-	int score, cur_x, cur_y;
+	int score = 1;
 	if (wraparound) {
 
-	} else {
-
+	} else{
+		// sum up-left
+		for (int i = lastMove.x - 1, j = lastMove.y - 1;
+			(i >= 0) && (j >= 0); --i, --j) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum down-right
+		for (int i = lastMove.x + 1, j = lastMove.y + 1;
+			(i < x) && (j < y); ++i, ++j) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum up-right
+		score = 1;
+		for (int i = lastMove.x - 1, j = lastMove.y + 1;
+			(i >= 0) && (j < y); --i, ++j) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
+		// sum down-left
+		for (int i = lastMove.x + 1, j = lastMove.y - 1;
+			(i < x) && (j >= 0); ++i, --j) {
+			if (chessboard[i][j] == player) ++score;
+			else break;
+			if (score >= connect) return true;
+		}
 	}
-	return score >= connect;
+	return false;
 }

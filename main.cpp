@@ -1,4 +1,4 @@
-#include<string>
+#include <string>
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -6,7 +6,13 @@
 
 using namespace std;
 
-int getInt(string str)
+// global variables
+static Connect4 * game;
+static const string errormsg = "Oops! I don't understand you, please reenter: ";
+static string input;
+
+// some helper functions
+int getPosInt(string str)
 {
 	try {
 		return stoi(str);
@@ -16,44 +22,115 @@ int getInt(string str)
 	}
 }
 
+bool isBool(char ch)
+{
+	switch (ch) {
+		case 'Y': case 'y': case 'N': case 'n': return true;
+		default: return false;
+	}
+}
+
+int min(int a, int b) { return a < b ? a : b; }
+
+// main, I guess
 int main()
 {
 	cout << "Let's play Connect Four!" << endl;
-	Connect4 * game = new Connect4(6, 7);
-	game->display();
-	string input_X, input_O;
-	int winner = NO_WINNER;
-	while (1)
-	{
-		cout << "Player X's turn! Type the column number to insert a piece: ";
-		cin >> input_X;
-		while (game->setX(getInt(input_X)))
-		{
-			cout << "Oops! I don't understand you, please reenter: ";
-			cin >> input_X;
+	system("pause");
+	cout << endl;
+	while (1) {
+		// default settings
+		int height = 6, width = 7, requiredToWin = 4;
+		bool wraparound = false;
+		cout << "*****Default Settings*****" << endl
+			<< "Chessboard size: " << height << "¡Á" << width << endl
+			<< "Required to win: " << requiredToWin << endl
+			<< "Wrap around: " << (wraparound ? "Yes" : "No") << endl
+			<< "Wanna change settings? (Y/N)" << endl;
+		cin >> input;
+		while (!isBool(input[0]) || input.length() > 1) {
+			cout << errormsg;
+			cin >> input;
 		}
-		game->display();
-		winner = game->checkWinner();
-		if (winner) break;
+		if (input[0] == 'Y' || input[0] == 'y') { // change settings
+			cout << "Chessboard Height (4-20): ";
+			cin >> input; // yes we can use input again
+			height = getPosInt(input);
+			while (height < 4 || height > 20) {
+				cout << errormsg;
+				cin >> input;
+				height = getPosInt(input);
+			}
+			cout << "Chessboard Width (4-20): ";
+			cin >> input;
+			width = getPosInt(input);
+			while (width < 4 || width > 20) {
+				cout << errormsg;
+				cin >> input;
+				width = getPosInt(input);
+			}
+			cout << "Require to win (3-" << min(height, width) << "): ";
+			cin >> input;
+			requiredToWin = getPosInt(input);
+			while (requiredToWin < 3 || requiredToWin > min(height, width)) {
+				cout << errormsg;
+				cin >> input;
+				requiredToWin = getPosInt(input);
+			}
+			cout << "Wrap around? (Y/N): ";
+			cin >> input;
+			while (!isBool(input[0]) || input.length() > 1) {
+				cout << errormsg;
+				cin >> input;
+			}
+			wraparound = (input[0] == 'Y' || input[0] == 'y') ? true : false;
+		}
 
-		cout << "Player O's turn! Type the column number to insert a piece: ";
-		cin >> input_O;
-		while (game->setO(getInt(input_O)))
-		{
-			cout << "Oops! I don't understand you, please reenter: ";
-			cin >> input_O;
-		}
+		// create a new game
+		game = new Connect4(height, width, requiredToWin, wraparound);
 		game->display();
-		winner = game->checkWinner();
-		if (winner) break;
-	}
-	switch (winner) {
+		string input_X, input_O;
+		int winner = NO_WINNER;
+		while (1)
+		{
+			cout << "Player X's turn! Type the column number to insert a piece: ";
+			cin >> input_X;
+			while (game->setX(getPosInt(input_X)))
+			{
+				cout << errormsg;
+				cin >> input_X;
+			}
+			game->display();
+			winner = game->checkWinner(PLAYER_X);
+			if (winner) break;
+
+			cout << "Player O's turn! Type the column number to insert a piece: ";
+			cin >> input_O;
+			while (game->setO(getPosInt(input_O)))
+			{
+				cout << errormsg;
+				cin >> input_O;
+			}
+			game->display();
+			winner = game->checkWinner(PLAYER_O);
+			if (winner) break;
+		}
+		switch (winner) {
 		case WINNER_X: cout << "Winner is X!!!" << endl; break;
 		case WINNER_O: cout << "Winner is O!!!" << endl; break;
 		case WINNER_TIE: cout << "Draw." << endl; break;
 		default: cout << "ERROR: This never happened."; break;
+		}
+		delete game;
+
+		// restart game
+		cout << "Play again? (Y/N): ";
+		cin >> input;
+		while (!isBool(input[0]) || input.length() > 1) {
+			cout << errormsg;
+			cin >> input;
+		}
+		if (input[0] == 'N' || input[0] == 'n') break;
 	}
-	system("pause");
-	delete game;
 	return 0;
 }

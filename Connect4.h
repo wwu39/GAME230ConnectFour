@@ -19,13 +19,12 @@ class Connect4
 	Connect4(); // dummy ctor
 	Pair lastMove; // keep track the location of last move
 	int totalMoves;
-	char curPlayer;
 
 	// private helpers
 	int winner(char);
-	bool checkHorizontal();
-	bool checkVertical();
-	bool checkDiagonal();
+	bool checkHorizontal(char);
+	bool checkVertical(char);
+	bool checkDiagonal(char);
 
 public:
 	// ctor and dtor
@@ -36,6 +35,6 @@ public:
 	void display();
 	int setX(int);
 	int setO(int);
-	int checkWinner();
+	int checkWinner(char);
 };
 
