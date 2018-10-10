@@ -125,6 +125,7 @@ int Connect4::delX(int a)
 	if (chessboard[x - 1][a] != 'X') return DELETE_FAIL;
 	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
 	chessboard[0][a] = '.'; // the toppest
+	--totalMoves;
 	return SUCCESS;
 }
 
@@ -135,15 +136,15 @@ int Connect4::delO(int a)
 	if (chessboard[x - 1][a] != 'O') return DELETE_FAIL;
 	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
 	chessboard[0][a] = '.'; // the toppest
+	--totalMoves;
 	return SUCCESS;
 }
 
 int Connect4::AIMove()
 {
-	// very naive AI
-	for (int i = 0; i < y; ++i) {
-		if (chessboard[0][i] == '.') return i;
-	}
+	// if next move will win, then take it
+	// if opponent's next move will win, take it
+	// else randomly pick one
 	return 0;
 }
 
