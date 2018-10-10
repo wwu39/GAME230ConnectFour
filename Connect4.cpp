@@ -102,12 +102,14 @@ int Connect4::checkWinnerDel(char player, int col)
 {
 	--col; // 0-based
 	int winner = NO_WINNER; // return value
-	for (int i = x - 1; i > 0; --i) {
+	for (int i = x - 1; i > 0; --i) { // 0th is always '.'
 		if (chessboard[i][col] == 'X') {
+			lastMove = { i, col };
 			winner = checkWinner('X');
 			if (winner) return winner;
 		}
 		if (chessboard[i][col] == 'O') {
+			lastMove = { i, col };
 			winner = checkWinner('O');
 			if (winner) return winner;
 		}
@@ -119,7 +121,7 @@ int Connect4::checkWinnerDel(char player, int col)
 int Connect4::delX(int a)
 {
 	--a; // turn to 0-based
-	if ((a > y) || (a < 1)) return DELETE_FAIL;
+	if ((a >= y) || (a < 0)) return DELETE_FAIL;
 	if (chessboard[x - 1][a] != 'X') return DELETE_FAIL;
 	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
 	chessboard[0][a] = '.'; // the toppest
@@ -129,7 +131,7 @@ int Connect4::delX(int a)
 int Connect4::delO(int a)
 {
 	--a; // turn to 0-based
-	if ((a > y) || (a < 1)) return DELETE_FAIL;
+	if ((a >= y) || (a < 0)) return DELETE_FAIL;
 	if (chessboard[x - 1][a] != 'O') return DELETE_FAIL;
 	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
 	chessboard[0][a] = '.'; // the toppest
