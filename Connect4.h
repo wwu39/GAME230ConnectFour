@@ -5,10 +5,12 @@
 #define WINNER_TIE 3
 #define SUCCESS 0
 #define INSERT_FAIL 3
+#define DELETE_FAIL 4
 #define PLAYER_X 'X'
 #define PLAYER_O 'O'
 
 struct Pair { int x, y; };
+struct PairSum { int X, O; };
 
 class Connect4
 {
@@ -17,7 +19,6 @@ class Connect4
 	bool wraparound; // def = no
 	char **chessboard;
 	Connect4(); // dummy ctor
-	Pair lastMove; // keep track the location of last move
 	int totalMoves;
 
 	// private helpers
@@ -33,10 +34,16 @@ public:
 	Connect4(int, int, int = 4, bool = false);
 	~Connect4();
 
+	Pair lastMove; // keep track the location of last move
+
 	// methods
 	void display();
 	int setX(int);
 	int setO(int);
 	int checkWinner(char);
+	int checkWinnerDel(char, int);
+	int delX(int);
+	int delO(int);
+	int AIMove();
+	PairSum sum();
 };
-

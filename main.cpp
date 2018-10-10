@@ -38,20 +38,22 @@ int main()
 	cout << "Let's play Connect Four!" << endl;
 	system("pause");
 	cout << endl;
+	// default settings
+	int height = 6, width = 7, requiredToWin = 4;
+	bool wraparound = false, eraseMod = false;
 	while (1) {
-		// default settings
-		int height = 6, width = 7, requiredToWin = 4;
-		bool wraparound = false;
 		cout << "*****Default Settings*****" << endl
 			<< "Chessboard size: " << height << "¡Á" << width << endl
 			<< "Required to win: " << requiredToWin << endl
 			<< "Wrap around: " << (wraparound ? "Yes" : "No") << endl
+			<< "Erase mode: " << (eraseMod ? "Yes" : "No") << endl
 			<< "Wanna change settings? (Y/N)" << endl;
 		cin >> input;
 		while (!isBool(input[0]) || input.length() > 1) {
 			cout << errormsg;
 			cin >> input;
 		}
+
 		if (input[0] == 'Y' || input[0] == 'y') { // change settings
 			cout << "Chessboard Height (4-20): ";
 			cin >> input; // yes we can use input again
@@ -61,6 +63,7 @@ int main()
 				cin >> input;
 				height = getPosInt(input);
 			}
+
 			cout << "Chessboard Width (4-20): ";
 			cin >> input;
 			width = getPosInt(input);
@@ -69,6 +72,7 @@ int main()
 				cin >> input;
 				width = getPosInt(input);
 			}
+
 			cout << "Require to win (3-" << min(height, width) << "): ";
 			cin >> input;
 			requiredToWin = getPosInt(input);
@@ -77,6 +81,7 @@ int main()
 				cin >> input;
 				requiredToWin = getPosInt(input);
 			}
+
 			cout << "Wrap around? (Y/N): ";
 			cin >> input;
 			while (!isBool(input[0]) || input.length() > 1) {
@@ -84,6 +89,15 @@ int main()
 				cin >> input;
 			}
 			wraparound = (input[0] == 'Y' || input[0] == 'y') ? true : false;
+
+			cout << "Erase Mode? (Y/N): ";
+			cin >> input;
+			while (!isBool(input[0]) || input.length() > 1) {
+				cout << errormsg;
+				cin >> input;
+			}
+			eraseMod = (input[0] == 'Y' || input[0] == 'y') ? true : false;
+
 		}
 
 		// create a new game
@@ -93,7 +107,30 @@ int main()
 		int winner = NO_WINNER;
 		while (1)
 		{
-			cout << "Player X's turn! Type the column number to insert a piece: ";
+			cout << "Player X's turn! ";
+			if (eraseMod && game->sum().X) {
+				cout << "Remove a piece? (Y/N): ";
+				cin >> input;
+				while (!isBool(input[0]) || input.length() > 1) {
+					cout << errormsg;
+					cin >> input;
+				}
+				if (input[0] == 'Y' || input[0] == 'y') { // erase a piece
+					cout << "Type the column number to remove a piece: ";
+					cin >> input_X;
+					while (game->delX(getPosInt(input_X)))
+					{
+						cout << errormsg;
+						cin >> input_X;
+					}
+					game->display();
+					int col = getPosInt(input_X);
+					winner = game->checkWinnerDel(PLAYER_X, col);
+					if (!winner) winner = game->checkWinnerDel(PLAYER_O, col);
+					goto skipInsertX;
+				}
+			}
+			cout << "Type the column number to insert a piece: ";
 			cin >> input_X;
 			while (game->setX(getPosInt(input_X)))
 			{
@@ -102,9 +139,33 @@ int main()
 			}
 			game->display();
 			winner = game->checkWinner(PLAYER_X);
+		skipInsertX:
 			if (winner) break;
 
-			cout << "Player O's turn! Type the column number to insert a piece: ";
+			cout << "Player O's turn! ";
+			if (eraseMod && game->sum().O) {
+				cout << "Remove a piece? (Y/N): ";
+				cin >> input;
+				while (!isBool(input[0]) || input.length() > 1) {
+					cout << errormsg;
+					cin >> input;
+				}
+				if (input[0] == 'Y' || input[0] == 'y') { // erase a piece
+					cout << "Type the column number to remove a piece: ";
+					cin >> input_O;
+					while (game->delO(getPosInt(input_O)))
+					{
+						cout << errormsg;
+						cin >> input_O;
+					}
+					game->display();
+					int col = getPosInt(input_O);
+					winner = game->checkWinnerDel(PLAYER_X, col);
+					if (!winner) winner = game->checkWinnerDel(PLAYER_O, col);
+					goto skipInsertO;
+				}
+			}
+			cout << "Type the column number to insert a piece: ";
 			cin >> input_O;
 			while (game->setO(getPosInt(input_O)))
 			{
@@ -113,6 +174,7 @@ int main()
 			}
 			game->display();
 			winner = game->checkWinner(PLAYER_O);
+		skipInsertO:			
 			if (winner) break;
 		}
 		switch (winner) {

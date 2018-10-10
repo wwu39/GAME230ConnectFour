@@ -98,6 +98,65 @@ int Connect4::checkWinner(char player)
 	return NO_WINNER;
 }
 
+int Connect4::checkWinnerDel(char player, int col)
+{
+	--col; // 0-based
+	int winner = NO_WINNER; // return value
+	for (int i = x - 1; i > 0; --i) {
+		if (chessboard[i][col] == 'X') {
+			winner = checkWinner('X');
+			if (winner) return winner;
+		}
+		if (chessboard[i][col] == 'O') {
+			winner = checkWinner('O');
+			if (winner) return winner;
+		}
+		if (chessboard[i][col] == '.') break;
+	}
+	return NO_WINNER;
+}
+
+int Connect4::delX(int a)
+{
+	--a; // turn to 0-based
+	if ((a > y) || (a < 1)) return DELETE_FAIL;
+	if (chessboard[x - 1][a] != 'X') return DELETE_FAIL;
+	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
+	chessboard[0][a] = '.'; // the toppest
+	return SUCCESS;
+}
+
+int Connect4::delO(int a)
+{
+	--a; // turn to 0-based
+	if ((a > y) || (a < 1)) return DELETE_FAIL;
+	if (chessboard[x - 1][a] != 'O') return DELETE_FAIL;
+	for (int i = x - 1; i > 0; --i) chessboard[i][a] = chessboard[i - 1][a];
+	chessboard[0][a] = '.'; // the toppest
+	return SUCCESS;
+}
+
+int Connect4::AIMove()
+{
+	// very naive AI
+	for (int i = 0; i < y; ++i) {
+		if (chessboard[0][i] == '.') return i;
+	}
+	return 0;
+}
+
+PairSum Connect4::sum()
+{
+	int sum_X = 0; int sum_O = 0;
+	for (int i = 0; i < x; ++i) {
+		for (int j = 0; j < y; ++j) {
+			if (chessboard[i][j] == 'X') ++sum_X;
+			if (chessboard[i][j] == 'O') ++sum_O;
+		}
+	}
+	return PairSum{ sum_X, sum_O };
+}
+
 bool Connect4::checkHorizontal(char player)
 {
 	int score = 1;
