@@ -101,21 +101,23 @@ int Connect4::checkWinner(char player)
 int Connect4::checkWinnerDel(char player, int col)
 {
 	--col; // 0-based
-	int winner = NO_WINNER; // return value
+	int score_X = 0, score_O = 0; // when del, both side can have multiple matches
+								// the side gets more matches wins
 	for (int i = x - 1; i > 0; --i) { // 0th is always '.'
 		if (chessboard[i][col] == 'X') {
 			lastMove = { i, col };
-			winner = checkWinner('X');
-			if (winner) return winner;
+			if (checkWinner('X')) ++score_X;
 		}
 		if (chessboard[i][col] == 'O') {
 			lastMove = { i, col };
-			winner = checkWinner('O');
-			if (winner) return winner;
+			if (checkWinner('O')) ++score_O;
 		}
 		if (chessboard[i][col] == '.') break;
 	}
-	return NO_WINNER;
+	if (score_X > score_O) return WINNER_X;
+	else if (score_O > score_X) return WINNER_O;
+	else if ((score_X == score_O) && (score_X != 0)) return WINNER_TIE;
+	else return NO_WINNER;
 }
 
 int Connect4::delX(int a)
