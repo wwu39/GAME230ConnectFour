@@ -41,7 +41,7 @@ public:
 	int setX(int);
 	int setO(int);
 	int checkWinner(char);
-	int checkWinnerDel(char, int);
+	int checkWinnerDel(int);
 	int delX(int);
 	int delO(int);
 	int AIMove();

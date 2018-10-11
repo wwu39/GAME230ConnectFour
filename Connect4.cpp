@@ -98,8 +98,9 @@ int Connect4::checkWinner(char player)
 	return NO_WINNER;
 }
 
-int Connect4::checkWinnerDel(char player, int col)
+int Connect4::checkWinnerDel(int col)
 {
+	if (totalMoves >= x * y) return WINNER_TIE;
 	--col; // 0-based
 	int score_X = 0, score_O = 0; // when del, both side can have multiple matches
 								// the side gets more matches wins

@@ -125,8 +125,7 @@ int main()
 					}
 					game->display();
 					int col = getPosInt(input_X);
-					winner = game->checkWinnerDel(PLAYER_X, col);
-					if (!winner) winner = game->checkWinnerDel(PLAYER_O, col);
+					winner = game->checkWinnerDel(col);
 					goto skipInsertX;
 				}
 			}
@@ -160,8 +159,7 @@ int main()
 					}
 					game->display();
 					int col = getPosInt(input_O);
-					winner = game->checkWinnerDel(PLAYER_X, col);
-					if (!winner) winner = game->checkWinnerDel(PLAYER_O, col);
+					winner = game->checkWinnerDel(col);
 					goto skipInsertO;
 				}
 			}
