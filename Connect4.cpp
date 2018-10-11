@@ -43,6 +43,7 @@ Connect4::~Connect4()
 {
 	for (int i = 0; i < x; ++i) delete chessboard[i];
 	delete chessboard;
+	chessboard = nullptr;
 }
 
 void Connect4::display()

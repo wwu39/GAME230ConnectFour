@@ -9,6 +9,8 @@ using namespace std;
 // global variables
 static Connect4 * game;
 static const string errormsg = "Oops! I don't understand you, please reenter: ";
+static const string errormsg_rm = "Can't remove a piece here, please reenter: ";
+static const string errormsg_ins = "Can't insert a piece here, please reenter: ";
 static string input;
 
 // some helper functions
@@ -120,7 +122,7 @@ int main()
 					cin >> input_X;
 					while (game->delX(getPosInt(input_X)))
 					{
-						cout << errormsg;
+						cout << errormsg_rm;
 						cin >> input_X;
 					}
 					game->display();
@@ -133,7 +135,7 @@ int main()
 			cin >> input_X;
 			while (game->setX(getPosInt(input_X)))
 			{
-				cout << errormsg;
+				cout << errormsg_ins;
 				cin >> input_X;
 			}
 			game->display();
@@ -154,7 +156,7 @@ int main()
 					cin >> input_O;
 					while (game->delO(getPosInt(input_O)))
 					{
-						cout << errormsg;
+						cout << errormsg_rm;
 						cin >> input_O;
 					}
 					game->display();
@@ -167,7 +169,7 @@ int main()
 			cin >> input_O;
 			while (game->setO(getPosInt(input_O)))
 			{
-				cout << errormsg;
+				cout << errormsg_ins;
 				cin >> input_O;
 			}
 			game->display();
@@ -182,6 +184,7 @@ int main()
 		default: cout << "ERROR: This never happened."; break;
 		}
 		delete game;
+		game = nullptr;
 
 		// restart game
 		cout << "Play again? (Y/N): ";
